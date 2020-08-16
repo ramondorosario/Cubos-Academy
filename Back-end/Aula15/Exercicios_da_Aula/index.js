@@ -71,6 +71,7 @@ const buscarProduto = (nomeProduto) => {
   }
   querContinuar(nomeProduto)
 }
+
 // Caso não tenha o produto informado, perguntar se gostaria de continuar ou encerrar o atendimento
 const querContinuar = (nomeProduto) => {
   console.log(`Não temos o produto ${chalk.red(nomeProduto)}`)
