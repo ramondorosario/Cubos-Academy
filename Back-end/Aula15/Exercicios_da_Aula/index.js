@@ -94,7 +94,7 @@ const perguntarQuantidade = (nomeProduto) => {
       novaPergunta(nomeProduto, estoque);
     } else {
       const totalPagar = valorCompra(nomeProduto, quantidade);
-      informarTotal(nomeProduto, totalPagar);
+      informarTotal(totalPagar, quantidade);
     }
   });
 }
@@ -113,7 +113,7 @@ const novaPergunta = (nomeProduto, quantidade) => {
   rl.question('Gostaria de levar a quantidade que temos em estoque?\n[1] para sim \n[2] para não\n', (resposta) => {
     if (resposta == 1) {
       const totalPagar = valorCompra(nomeProduto, quantidade);
-      informarTotal(nomeProduto, totalPagar);
+      informarTotal(totalPagar, quantidade);
     } else if (resposta == 2) {
       console.log(`${chalk.blue('Tudo bem então! Agradecemos a sua visita e volte sempre!')}`)
       rl.close();
@@ -134,8 +134,8 @@ const valorCompra = (nomeProduto, quantidade) => {
 }
 
 // Informar total da compra e perguntar se gostaria de efetuar o pagamento
-const informarTotal = (nomeProduto, totalPagar) => {
-  rl.question(`O valor total da compra é ${chalk.green(`R$ ${totalPagar.toFixed(2)}`)}. Gostaria de efetuar a compra?\n[1] para sim\n[2] para não\n`, (resposta) => { if (resposta == 1) {
+const informarTotal = (totalPagar, quantidade) => {
+  rl.question(`O preço unitário do produto é ${chalk.green(`R$ ${totalPagar.toFixed(2) / quantidade}`)}. E o valor total da compra é ${chalk.green(`R$ ${totalPagar.toFixed(2)}`)}.\nGostaria de efetuar a compra?\n[1] para sim\n[2] para não\n`, (resposta) => { if (resposta == 1) {
       console.log(`${chalk.green('Obrigado pela preferência e volte sempre!')}`)
       rl.close();
     } else if (resposta == 2) {
