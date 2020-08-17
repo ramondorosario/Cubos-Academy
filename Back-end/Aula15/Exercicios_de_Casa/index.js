@@ -151,7 +151,6 @@ const adicionarSacola = (nomeProduto, quantidade) => {
       )
     }
   }
-  console.log(sacola)
 }
 
 // Finalizar o pedido e informar uma lista com os itens presente na sacola e o valor total a pagar.
