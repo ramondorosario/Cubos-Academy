@@ -20,7 +20,6 @@ const rl = readline.createInterface({
  */
 
 const chalk = require('chalk');
-const { loadavg } = require("os");
 const lojaDeRoupa = [
   {
     nome: 'camisa',
