@@ -155,6 +155,7 @@ const adicionarSacola = (nomeProduto, quantidade) => {
   console.log(sacola)
 }
 
+// Finalizar o pedido e informar uma lista com os itens presente na sacola e o valor total a pagar.
 const finalizarPedido = () => {
   let totalPedido = 0;
   console.log(chalk.yellow(`--------Itens na Sacola--------`))
@@ -164,7 +165,7 @@ const finalizarPedido = () => {
     totalPedido += (sacola[i].qtd * sacola[i].precoUnit)
   }
   console.log(chalk.yellow(`-------------------------------`))
-  
+
   rl.question(`Valor total da compra ${chalk.green(`R$ ${(totalPedido / 100).toFixed(2)}`)}.\nO que gostaria de fazer?\n[1] Fazer o pagamento\n[2] Cancelar a compra\n`, (resposta) => {
     if(resposta == 1) {
       console.log(chalk.green('Agradecemos a preferência! Volte sempre!'));
