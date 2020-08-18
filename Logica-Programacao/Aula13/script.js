@@ -6,7 +6,7 @@ const text = document.querySelector('.text');
 button.addEventListener('click', () => {
     const entrada = input.value;
     //alterar o nome da função que quer executar
-    questao1(entrada);
+    questao7(entrada);
 })
 
 // Questão 2
@@ -54,16 +54,7 @@ const questao6 = (entrada) => {
 
 // Questão 7
 const questao7 = (entrada) => {
-    let textoTratado = entrada;
-    let guardar;
-
-    while (textoTratado.includes('muito') || textoTratado.includes('muito')) {
-        guardar = textoTratado.replace('muito', 'MUITO');
-        textoTratado = guardar;
-
-        guardar = textoTratado.replace('Muito', 'MUITO');
-        textoTratado = guardar;
-    }
+    let textoTratado = entrada.replace(/muito/gi, 'MUITO');    
     text.innerHTML = textoTratado;
 }
 
