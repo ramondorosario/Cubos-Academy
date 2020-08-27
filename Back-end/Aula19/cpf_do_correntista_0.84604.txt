@@ -1,0 +1,11 @@
+|| Caixa Econômica Federal ||
+Extrato bancario de Fulano, CPF 123.123.123-12
+Agencia 3211-2 - Conta Corrente 123546-7
+-----------------------------------------------
+|| MOVIMENTAÇÕES ||
+-----------------------------------------------
+Tipo | Data da Ocorrência | Valor Movimentado
+-----------------------------------------------
+Saída | 25-08-2020 13:34 | R$ 100.00
+Saída | 26-08-2020 17:34 | R$ 114.22
+Entrada | 25-08-2020 18:34 | R$ 150.00

@@ -1,0 +1,10 @@
+|| Banco Bradesco ||
+Extrato bancario de Fulaninha, CPF 234.234.234-23
+Agencia 3331-2 - Conta Corrente 123756-7
+-----------------------------------------------
+|| MOVIMENTAÇÕES ||
+-----------------------------------------------
+Tipo | Data da Ocorrência | Valor Movimentado
+-----------------------------------------------
+Entrada | 26-08-2020 17:34 | R$ 114.22
+Saída | 25-08-2020 13:34 | R$ 75.00
