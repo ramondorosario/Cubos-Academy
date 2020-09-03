@@ -22,7 +22,7 @@ const tratarCpf = (x) => {
 
 // Deixa o numero de telefone formatado
 const tratarTelefone = (x) => {
-    const tel = pessoaFormatada.telefone;
+    const tel = x;
     if(tel.length === 11) {
         const resultado = `(${tel.substr(0, 2)}) 9${tel.substr(2, 4)}-${tel.substr(6, 4)}`
         return resultado
