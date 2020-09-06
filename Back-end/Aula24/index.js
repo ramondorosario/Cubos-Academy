@@ -90,11 +90,15 @@ server.use((ctx) => {
         if (ctx.url.includes('/encurta/')) {
             const encurtadorEscolhido = ctx.url.split('/')[2];
             if (encurtadorEscolhido !== '') {
-                const resposta = verificarEncurtador(encurtadorEscolhido);
-                if(resposta === null) {
-                    addEncurtadorEscolhido(ctx, encurtadorEscolhido);
+                if (verificarUrl(ctx)) {
+                    const resposta = verificarEncurtador(encurtadorEscolhido);
+                    if(resposta === null) {
+                        addEncurtadorEscolhido(ctx, encurtadorEscolhido);
+                    } else {
+                        formatarErro(ctx, 401, 'Não autorizado. Encurtador escolhido já existe')
+                    }
                 } else {
-                    formatarErro(ctx, 401, 'Não autorizado. Encurtador escolhido já existe')
+                    formatarErro(ctx, 400, 'Requisição mal formatada')
                 }
             } else {
                 formatarErro(ctx, 401, 'Não foi feita a declaração do encurtador')
