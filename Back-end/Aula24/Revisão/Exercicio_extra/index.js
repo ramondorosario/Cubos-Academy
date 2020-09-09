@@ -228,9 +228,7 @@ const deletarPost = (ctx) => {
 
 /** Exibe todos os posts de um autor específico */
 const exibirPostsAutor = (ctx) => {
-    console.log('entrei no posts autor')
     const id = ctx.url.split('=')[1];
-    console.log(id)
     const respostaAutor = encontrar(autores, id);
     const indiceAutor = respostaAutor[1];
 
