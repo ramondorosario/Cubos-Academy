@@ -27,16 +27,16 @@ fs.readFile('brasileirao.txt', (err, data) => {
     jogo.forEach(x => {
         if(x.golsA > x.golsB) {
             pontuar(x.timeA, 3, x.golsA, x.golsB);
-            pontuar(x.timeB, 0, x.golsA, x.golsB);
+            pontuar(x.timeB, 0, x.golsB, x.golsA);
         } else if (x.golsB > x.golsA) {
             pontuar(x.timeA, 0, x.golsA, x.golsB);
-            pontuar(x.timeB, 3, x.golsA, x.golsB);
+            pontuar(x.timeB, 3, x.golsB, x.golsA);
         } else {
             pontuar(x.timeA, 1, x.golsA, x.golsB);
-            pontuar(x.timeB, 1, x.golsA, x.golsB);
+            pontuar(x.timeB, 1, x.golsB, x.golsA);
         }
     })
-    
+
     ordernarTabela();
     console.log(tabelaOrdenada);
     // exibirJogos('Flamengo');
