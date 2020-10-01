@@ -1,8 +1,8 @@
 const fs = require('fs');
 
+// Questão 1 - Ler arquivo txt
 const conteudo = fs.readFileSync('brasileirao.txt').toString().split('\n');
 
-// Questão 1 - Ler arquivo txt
 const jogos = conteudo.map((jogo) => {
 	const linhas = jogo.split('\t');
 	return {
