@@ -1,36 +1,36 @@
+/* eslint-disable camelcase */
 const imprimir = require('../utils/response');
-
-const autores = [];
-/** Encontra um elemento específico em um array */
-const encontrar = (origem, id) => {
-	let resultado = false;
-	let indice;
-	origem.forEach((item, i) => {
-		if (item.id === id) {
-			resultado = true;
-			indice = i;
-		}
-	});
-	// O retorno sempre vai ser um array dizendo se existe o elemento buscado e qual a posição que ele se encontra
-	const resposta = [resultado, indice];
-	return resposta;
-};
+const autores = require('../repositories/autores');
 
 /** Cria um autor */
-const criarAutor = (ctx) => {
-	const conteudo = ctx.request.body;
-	const newId = conteudo.id;
-	const resposta = encontrar(autores, newId);
+const criarAutor = async (ctx) => {
+	const listaAutores = await autores.obterAutores();
 
-	if (!resposta[0]) {
-		if (conteudo !== '') {
-			autores.push(conteudo);
-			imprimir(ctx, 201, 'autor criado com sucesso', 'autor', conteudo);
-		} else {
-			imprimir(ctx, 400, 'autor mal formatado');
-		}
-	} else {
-		imprimir(ctx, 401, 'já existe um autor com o id informado');
-	}
+	const {
+		primeiro_nome = null,
+		ultimo_nome = null,
+		email = null,
+		senha = null,
+	} = ctx.request.body;
+
+	if (!primeiro_nome || !ultimo_nome || !email || !senha)
+		return imprimir(ctx, 400, 'requisição mal formatada');
+
+	const indice = listaAutores.filter(
+		(a) =>
+			a.primeiro_nome === primeiro_nome && a.ultimo_nome === ultimo_nome
+	);
+	if (indice[0])
+		return imprimir(ctx, 401, 'já existe um autor com o nome informado');
+
+	const autor = {
+		primeiro_nome,
+		ultimo_nome,
+		email,
+		senha,
+	};
+
+	const autorCriado = await autores.criarAutor(autor);
+	return imprimir(ctx, 201, 'autor criado', 'autor', autorCriado);
 };
-module.exports = { criarAutor, autores };
+module.exports = { criarAutor };

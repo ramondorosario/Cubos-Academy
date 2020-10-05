@@ -1,15 +1,15 @@
 const imprimir = require('../utils/response');
-const autores = require('./criarAutor').autores;
+const autores = require('../repositories/autores');
 
 /** Atualiza um autor */
-const atualizarAutor = (ctx) => {
+const atualizarAutor = async (ctx) => {
 	const { id } = ctx.params;
-	const indiceAutor = autores.findIndex((x) => x.id === id);
+	let autor = await autores.obterAutor(id);
 
 	const novasInformacoes = ctx.request.body;
 
-	if (indiceAutor !== -1) {
-		if (!autores[indiceAutor].deletado) {
+	if (autor) {
+		if (!autor.deletado) {
 			// Se o autor não estiver deletado, poderá sofrer atualização
 			if (
 				novasInformacoes.id !== undefined ||
@@ -20,20 +20,36 @@ const atualizarAutor = (ctx) => {
 				return;
 			}
 			if (novasInformacoes.email !== undefined) {
-				autores[indiceAutor].email = novasInformacoes.email;
+				await autores.atualizarAutor(
+					id,
+					'email',
+					novasInformacoes.email
+				);
 			}
 			if (novasInformacoes.senha !== undefined) {
-				autores[indiceAutor].senha = novasInformacoes.senha;
+				await autores.atualizarAutor(
+					id,
+					'senha',
+					novasInformacoes.senha
+				);
 			}
 			if (novasInformacoes.primeiro_nome !== undefined) {
-				autores[indiceAutor].primeiro_nome =
-					novasInformacoes.primeiro_nome;
+				await autores.atualizarAutor(
+					id,
+					'primeiro_nome',
+					novasInformacoes.primeiro_nome
+				);
 			}
-			if (novasInformacoes.primeiro_nome !== undefined) {
-				autores[indiceAutor].ultimo_nome = novasInformacoes.ultimo_nome;
+			if (novasInformacoes.ultimo_nome !== undefined) {
+				await autores.atualizarAutor(
+					id,
+					'ultimo_nome',
+					novasInformacoes.ultimo_nome
+				);
 			}
-			const autor = autores[indiceAutor];
-			imprimir(ctx, 200, 'autor atualizado com sucesso', 'autor', autor);
+
+			autor = await autores.obterAutor(id);
+			imprimir(ctx, 200, 'autor atualizado', 'autor', autor);
 		} else imprimir(ctx, 401, 'autor foi deletado');
 	} else {
 		imprimir(ctx, 404, 'autor não encontrado');

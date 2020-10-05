@@ -1,26 +1,23 @@
-const { posts } = require('./criarPost');
 const imprimir = require('../utils/response');
-const { autores } = require('./criarAutor');
+const posts = require('../repositories/posts');
 
-/** Exibe todos os posts */
-const exibirPosts = (ctx) => {
+/** Exibe um post */
+const exibirPosts = async (ctx) => {
+	const listaPosts = await posts.obterPosts();
 	const { autor = null } = ctx.query;
-	if (autor) {
-		const postsAutor = posts.filter(
-			(x) => x.autor === autor && !x.deletado
-		);
-		const dadosAutor = autores.find((x) => x.id === autor);
-		if (!dadosAutor) return imprimir(ctx, 404, 'autor não encontrado');
-		const { primeiro_nome: nome, ultimo_nome: sobrenome } = dadosAutor;
-		imprimir(
-			ctx,
-			200,
-			`posts do autor ${nome} ${sobrenome} encontrado`,
-			'posts',
-			postsAutor
-		);
-	}
-	return imprimir(ctx, 200, 'lista de posts encontrada', 'posts', posts);
-};
 
+	if (!autor) {
+		return imprimir(ctx, 200, 'post encontrado', 'post', listaPosts);
+	}
+
+	let postsAutor = listaPosts.filter(
+		(x) => x.autor.split(' ').join('') === autor.split(' ').join('')
+	);
+
+	if (!postsAutor.length) return imprimir(ctx, 404, 'autor não encontrado');
+
+	postsAutor = postsAutor.filter((x) => !x.deletado);
+
+	return imprimir(ctx, 200, 'posts encontrado', 'posts', postsAutor);
+};
 module.exports = exibirPosts;

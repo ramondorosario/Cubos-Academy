@@ -1,28 +1,19 @@
 const imprimir = require('../utils/response');
-const { posts } = require('./criarPost');
-const { autores } = require('./criarAutor');
+const posts = require('../repositories/posts');
 
 /** Exibe um post */
-const exibirPost = (ctx) => {
+const exibirPost = async (ctx) => {
 	const { id } = ctx.params;
-	const indicePost = posts.findIndex((x) => x.id === id);
-	if (indicePost !== -1) {
-		if (!posts[indicePost].deletado) {
-			const idAutor = posts[indicePost].autor;
-			const autor = autores.find((x) => x.id === idAutor);
-			const post = posts[indicePost];
+	if (!id) imprimir(ctx, '400', 'requisição mal formatada');
 
-			if (!autor.deletado) {
-				ctx.status = 200;
-				imprimir(ctx, 200, 'post criado', 'post', post);
-			} else {
-				imprimir(ctx, 404, 'o post foi removido');
-			}
-		} else {
-			imprimir(ctx, 404, 'o post foi removido');
+	const post = await posts.obterPost(id);
+
+	if (post) {
+		if (!post.deletado) {
+			return imprimir(ctx, 200, 'post encontrado', 'post', post);
 		}
-	} else {
-		imprimir(ctx, 404, 'post não encontrado');
+		return imprimir(ctx, 401, 'post foi removido');
 	}
+	return imprimir(ctx, 404, 'post não encontrado');
 };
 module.exports = exibirPost;

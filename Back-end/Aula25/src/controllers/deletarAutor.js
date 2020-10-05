@@ -1,28 +1,25 @@
 const imprimir = require('../utils/response');
-const autores = require('./criarAutor').autores;
-const { posts } = require('./criarPost');
+const autores = require('../repositories/autores');
+const posts = require('../repositories/posts');
 
 /** Deleta um autor através do id informado */
-const deletarAutor = (ctx) => {
-	const { id } = ctx.params;
-	const indiceAutor = autores.findIndex((x) => x.id === id);
+const deletarAutor = async (ctx) => {
+	const { id = null } = ctx.params;
 
-	if (indiceAutor !== -1) {
-		if (autores[indiceAutor].deletado) {
-			return imprimir(ctx, 401, 'autor já se encontra deletado');
-		}
-		autores[indiceAutor].deletado = true;
-		const autor = autores[indiceAutor];
+	if (id) {
+		const autor = await autores.obterAutor(id);
 
-		const postAutor = posts.filter((x) => x.autor === autor.id);
-		postAutor.forEach((x, i) => {
-			if (!x.deletado) {
-				posts[i].deletado = true;
+		if (autor) {
+			if (autor.deletado) {
+				return imprimir(ctx, 401, 'autor já se encontra deletado');
 			}
-		});
+			const resultado = await autores.deletarAutor(id);
 
-		return imprimir(ctx, 200, 'autor deletado', 'autor', autor);
+			await posts.deletarPostsAutor(autor.id);
+			return imprimir(ctx, 200, 'autor deletado', 'autor', resultado);
+		}
 	}
 	return imprimir(ctx, 404, 'autor não encontrado');
 };
+
 module.exports = deletarAutor;

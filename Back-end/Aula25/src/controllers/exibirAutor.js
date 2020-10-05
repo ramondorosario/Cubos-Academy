@@ -1,15 +1,16 @@
 const imprimir = require('../utils/response');
-const autores = require('./criarAutor').autores;
+const autores = require('../repositories/autores');
 
 /** Exibe um autor através da id escolhida na criação */
-const exibirAutor = (ctx) => {
-	const { id } = ctx.params;
-	const indiceAutor = autores.findIndex((x) => x.id === id);
-	if (indiceAutor !== -1) {
-		imprimir(ctx, 200, 'autor encontrado', 'autor', autores[indiceAutor]);
-		return;
-	}
-	imprimir(ctx, 404, 'autor não encontrado');
+const exibirAutor = async (ctx) => {
+	const { id = null } = ctx.params;
+	if (!id) imprimir(ctx, 400, 'requisição mal formatada');
+
+	const autor = await autores.obterAutor(id);
+
+	if (!autor) return imprimir(ctx, 404, 'autor não encontrado');
+
+	return imprimir(ctx, 200, 'autor econtrado', 'autor', autor);
 };
 
 module.exports = exibirAutor;

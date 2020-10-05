@@ -1,28 +1,27 @@
 const imprimir = require('../utils/response');
-const { autores } = require('./criarAutor');
+const posts = require('../repositories/posts');
+const autores = require('../repositories/autores');
 
-const posts = [];
 /** Cria um post com base em um autor */
-const criarPost = (ctx) => {
-	const jaExiste = posts.filter((item) => item.id === ctx.request.body.id);
+const criarPost = async (ctx) => {
+	const {
+		titulo = null,
+		subtitulo = null,
+		idAutor = null,
+		publicado = null,
+	} = ctx.request.body;
 
-	if (jaExiste.length === 0) {
-		const { autor } = ctx.request.body;
-		const indiceAutor = autores.findIndex((x) => x.id === autor);
+	if (!titulo || !subtitulo || !idAutor || !publicado)
+		return imprimir(ctx, 400, 'requisição mal formatada');
 
-		if (indiceAutor !== -1) {
-			if (!autores[indiceAutor].deletado) {
-				const post = ctx.request.body;
-				posts.push(ctx.request.body);
-				imprimir(ctx, 201, 'post criado', 'post', post);
-			} else {
-				imprimir(ctx, 401, 'o autor foi removido');
-			}
-		} else {
-			imprimir(ctx, 404, 'autor não encontrado');
-		}
-	} else {
-		imprimir(ctx, 401, 'já existe um post com a id informada');
-	}
+	const autor = await autores.obterAutor(idAutor);
+	if (!autor) return imprimir(ctx, 404, 'autor não encontrado');
+	if (autor.deletado) return imprimir(ctx, 401, 'autor foi removido');
+
+	const conteudo = ctx.request.body;
+	conteudo.autor = `${autor.primeiro_nome} ${autor.ultimo_nome}`;
+
+	const resultado = await posts.criarPost(conteudo);
+	return imprimir(ctx, 201, 'post criado', 'post', resultado);
 };
 module.exports = { criarPost, posts };

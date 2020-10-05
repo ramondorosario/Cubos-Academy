@@ -1,18 +1,19 @@
 const imprimir = require('../utils/response');
-const { posts } = require('./criarPost');
+const posts = require('../repositories/posts');
 
 /** Deleta um post */
-const deletarPost = (ctx) => {
-	const { id } = ctx.params;
-	const indicePost = posts.findIndex((x) => x.id === id);
+const deletarPost = async (ctx) => {
+	const { id = null } = ctx.params;
+	if (!id) imprimir(ctx, 400, 'requisição mal formatada');
 
-	if (indicePost !== -1) {
-		const post = posts[indicePost];
+	const post = await posts.obterPost(id);
+	if (post) {
 		if (post.deletado) {
-			return imprimir(ctx, 403, 'post já se encontra deletado');
+			return imprimir(ctx, 401, 'post já se encontra deletado');
 		}
-		post.deletado = true;
-		return imprimir(ctx, 200, 'post deletado', 'post', posts[indicePost]);
+
+		const deletado = await posts.deletarPost(id);
+		return imprimir(ctx, 200, 'post deletado', 'post', deletado);
 	}
 	return imprimir(ctx, 404, 'post não encontrado');
 };
