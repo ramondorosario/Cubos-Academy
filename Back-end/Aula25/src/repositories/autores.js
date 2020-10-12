@@ -1,22 +1,7 @@
 const database = require('../utils/database');
 
-/** Cria a tabela caso não exista */
-const criarTabela = async () => {
-	const query = `CREATE TABLE IF NOT EXISTS autores (
-		id SERIAL,
-		primeiro_nome TEXT,
-		ultimo_nome TEXT,
-		email TEXT,
-		senha TEXT,
-		deletado BOOL DEFAULT FALSE
-	)`;
-
-	return database.query(query);
-};
-
 /** Cria um autor */
 const criarAutor = async (dados) => {
-	await criarTabela();
 	const query = {
 		text: `INSERT INTO autores (primeiro_nome, ultimo_nome, email, senha) VALUES ($1, $2, $3, $4) RETURNING *`,
 		values: [
@@ -31,7 +16,6 @@ const criarAutor = async (dados) => {
 };
 
 const obterAutor = async (id) => {
-	await criarTabela();
 	const query = `SELECT * FROM autores WHERE id=${id}`;
 
 	const resultado = await database.query(query);
@@ -40,18 +24,21 @@ const obterAutor = async (id) => {
 
 /** Obtem a lista dos autores */
 const obterAutores = async () => {
-	await criarTabela();
-
 	const query = `SELECT * FROM autores;`;
 	const resultado = await database.query(query);
 
 	return resultado.rows;
 };
 
+const obterAutorPorEmail = async (email) => {
+	const query = `SELECT * FROM autores WHERE email='${email}'`;
+
+	const result = await database.query(query);
+	return result.rows.shift();
+};
+
 /** Deleta um autor */
 const deletarAutor = async (id) => {
-	await criarTabela();
-
 	const query = `UPDATE autores SET deletado=true WHERE id=${id} RETURNING *`;
 
 	const resultado = await database.query(query);
@@ -60,8 +47,6 @@ const deletarAutor = async (id) => {
 
 /** Atualiza as informações de um autor */
 const atualizarAutor = async (id, propriedade, valor) => {
-	await criarTabela();
-
 	const query = `UPDATE autores SET ${propriedade}= '${valor}' WHERE id= ${id}`;
 
 	const resultado = await database.query(query);
@@ -69,9 +54,9 @@ const atualizarAutor = async (id, propriedade, valor) => {
 };
 
 module.exports = {
-	criarTabela,
 	criarAutor,
 	obterAutor,
+	obterAutorPorEmail,
 	obterAutores,
 	deletarAutor,
 	atualizarAutor,

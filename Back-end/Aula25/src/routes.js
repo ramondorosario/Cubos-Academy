@@ -12,12 +12,17 @@ const exibirPosts = require('./controllers/exibirPosts');
 const atualizarPost = require('./controllers/atualizarPost');
 const deletarPost = require('./controllers/deletarPost');
 const exibirAutores = require('./controllers/exibirAutores');
+const autenticar = require('./controllers/auth');
+const password = require('./middlewares/encrypt');
 
-router.post('/autor', criarAutor);
+router.post('/auth', autenticar);
+
+router.post('/autor', password.encrypt, criarAutor);
 router.get('/autor/:id', exibirAutor);
 router.get('/autores', exibirAutores);
 router.delete('/autor/:id', deletarAutor);
 router.put('/autor/:id', atualizarAutor);
+
 router.post('/posts', criarPost);
 router.get('/posts/:id', exibirPost);
 router.get('/posts', exibirPosts);
