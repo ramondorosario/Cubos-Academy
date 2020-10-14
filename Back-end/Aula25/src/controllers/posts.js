@@ -80,7 +80,8 @@ const exibirPosts = async (ctx) => {
 	const { autor = null } = ctx.query;
 
 	if (!autor) {
-		return imprimir(ctx, 200, 'post encontrado', 'post', listaPosts);
+		const listaFiltrada = listaPosts.filter((p) => !p.deletado);
+		return imprimir(ctx, 200, 'post encontrado', 'post', listaFiltrada);
 	}
 
 	let postsAutor = listaPosts.filter(
