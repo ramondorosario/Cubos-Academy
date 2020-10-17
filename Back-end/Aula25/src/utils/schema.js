@@ -36,7 +36,7 @@ const dropTable = async (tableName) => {
 	console.log('Tabela dropada');
 	return database.query(query);
 };
-// dropTable('autores');
+// dropTable('posts');
 
 /** Cria todas as tabelas ou uma em particular */
 const up = async (number = null) => {

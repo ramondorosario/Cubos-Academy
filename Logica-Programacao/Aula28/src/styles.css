@@ -1,0 +1,23 @@
+body {
+	font-family: sans-serif;
+}
+
+.app {
+	display: flex;
+	justify-content: center;
+}
+
+.label {
+	display: flex;
+}
+
+label {
+	display: flex;
+	flex-direction: column;
+	margin: 0.5em;
+}
+
+.erro {
+	color: red;
+	font-size: 0.8em;
+}
