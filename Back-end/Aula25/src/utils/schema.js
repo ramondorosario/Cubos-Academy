@@ -27,6 +27,22 @@ const schema = [
 		deletado BOOL DEFAULT FALSE
 	)`,
 	},
+	{
+		3: `CREATE TABLE IF NOT EXISTIS credit_cards (
+		id SERIAL,
+		autor_id NUMBER NOT NULL,
+		first_digits TEXT NOT NULL,
+		last_digits TEXT NOT NULL,
+		brand_card TEXT,
+		card_hash TEXT NOT NULL
+		holder_name TEXT NOT NULL
+	)`,
+	},
+	{
+		4: `CREATE TABLE IF NOT EXISTIS transactions (
+			id SERIAL
+		)`,
+	},
 ];
 
 /** Deleta uma tabela */

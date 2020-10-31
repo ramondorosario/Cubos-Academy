@@ -7,8 +7,11 @@ const Posts = require('./controllers/posts');
 const Autenticar = require('./controllers/auth');
 const Password = require('./middlewares/encrypt');
 const Session = require('./middlewares/session');
+const Payments = require('./controllers/payment');
 
 router.post('/auth', Autenticar);
+
+router.post('/payment', Session.verify, Payments.payment);
 
 router.post('/autor', Password.encrypt, Autores.criarAutor);
 router.get('/autor/:id', Session.verify, Autores.exibirAutor);
