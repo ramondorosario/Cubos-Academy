@@ -13,7 +13,9 @@ const schema = [
 		ultimo_nome TEXT NOT NULL,
 		email TEXT NOT NULL,
 		senha TEXT NOT NULL,
-		deletado BOOL DEFAULT FALSE
+		deletado BOOL DEFAULT FALSE,
+		codigo_verificacao TEXT,
+		verificado BOOL DEFAULT FALSE
 	)`,
 	},
 	{

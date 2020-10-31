@@ -3,16 +3,23 @@ const database = require('../utils/database');
 /** Cria um autor */
 const criarAutor = async (dados) => {
 	const query = {
-		text: `INSERT INTO autores (primeiro_nome, ultimo_nome, email, senha) VALUES ($1, $2, $3, $4) RETURNING *`,
+		text: `INSERT INTO autores (primeiro_nome, ultimo_nome, email, senha, codigo_verificacao) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
 		values: [
 			dados.primeiro_nome,
 			dados.ultimo_nome,
 			dados.email,
 			dados.senha,
+			dados.codigoVerificacao,
 		],
 	};
 	const resultado = await database.query(query);
 	return resultado.rows.shift();
+};
+
+/** Confirmar email do autor */
+const confirmarEmail = async (id, codigoVerificacao) => {
+	const query = `UPDATE autores SET codigo_verificacao = null, verificado = true WHERE id=${id} AND codigo_verificacao = '${codigoVerificacao}'`;
+	return database.query(query);
 };
 
 const obterAutor = async (id) => {
@@ -57,6 +64,7 @@ const atualizarAutor = async (id, propriedade, valor) => {
 
 module.exports = {
 	criarAutor,
+	confirmarEmail,
 	obterAutor,
 	obterAutorPorEmail,
 	obterAutores,

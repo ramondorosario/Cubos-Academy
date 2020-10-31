@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+const crypto = require('crypto');
 const imprimir = require('../utils/response');
 const autores = require('../repositories/autores');
 const posts = require('../repositories/posts');
@@ -35,16 +36,21 @@ const criarAutor = async (ctx) => {
 			'já existe um autor cadastrado com o email informado'
 		);
 
+	const codigoVerificacao = crypto.randomBytes(20).toString('hex');
+
 	const autor = {
 		primeiro_nome,
 		ultimo_nome,
 		email,
 		senha: hash,
+		codigoVerificacao,
 	};
 
 	const autorCriado = await autores.criarAutor(autor);
+	const { senha, codigo_verificacao, ...dados } = autorCriado;
+
 	await Email.enviarEmail(
-		'aleatorio@cubos.academy',
+		email,
 		'Cadastro na Cubos Academy Blogosfera',
 		'<b>Parabéns! Agora você faz parte da maior plataforma de blogs dentro de Cubos Academy</b>'
 	);
@@ -109,7 +115,7 @@ const criarAutor = async (ctx) => {
 									</tr>
 									<tr>
 										<td class="content-block" itemprop="handler" itemscope itemtype="http://schema.org/HttpActionHandler">
-											<a href="http://www.mailgun.com" class="btn-primary" itemprop="url">Confirme seu email</a>
+											<a href="http://localhost:8081/autores/${autorCriado.id}/confirm/${codigo_verificacao}" class="btn-primary" itemprop="url" onclick="() => {alert('teste')}">Confirme seu email</a>
 										</td>
 									</tr>
 									<tr>
@@ -137,7 +143,18 @@ const criarAutor = async (ctx) => {
 	</html>`
 	);
 
-	return imprimir(ctx, 201, 'autor criado', 'autor', autorCriado);
+	return imprimir(ctx, 201, 'autor criado', 'autor', dados);
+};
+
+/** Confirmar email */
+const confirmarEmail = async (ctx) => {
+	const { id, code } = ctx.params;
+
+	const autor = await autores.obterAutor(id);
+	if (autor.verificado) return imprimir(ctx, 401, 'email já confirmado');
+
+	await autores.confirmarEmail(id, code);
+	return imprimir(ctx, 200, 'email confirmado');
 };
 
 /** Atualiza os dados de um autor */
@@ -188,7 +205,9 @@ const atualizarAutor = async (ctx) => {
 			}
 
 			autor = await autores.obterAutor(id);
-			imprimir(ctx, 200, 'autor atualizado', 'autor', autor);
+			const { senha, codigo_verificacao, ...dados } = autor;
+
+			imprimir(ctx, 200, 'autor atualizado', 'autor', dados);
 		} else imprimir(ctx, 401, 'autor foi deletado');
 	} else {
 		imprimir(ctx, 404, 'autor não encontrado');
@@ -201,17 +220,25 @@ const exibirAutor = async (ctx) => {
 	if (!id) imprimir(ctx, 400, 'requisição mal formatada');
 
 	const autor = await autores.obterAutor(id);
+	const { senha, codigo_verificacao, ...dados } = autor;
 
 	if (!autor) return imprimir(ctx, 404, 'autor não encontrado');
 
-	return imprimir(ctx, 200, 'autor econtrado', 'autor', autor);
+	return imprimir(ctx, 200, 'autor econtrado', 'autor', dados);
 };
 
 /** Exibe todos os autores */
 const exibirAutores = async (ctx) => {
 	let listaAutores = await autores.obterAutores();
 
-	listaAutores = listaAutores.filter((x) => !x.deletado);
+	listaAutores = listaAutores.map((x) => {
+		let resultado;
+		if (!x.deletado) {
+			const { senha, codigo_verificacao, ...dados } = x;
+			resultado = dados;
+		}
+		return resultado;
+	});
 
 	imprimir(ctx, 200, 'autores encontrados', 'autores', listaAutores);
 };
@@ -228,9 +255,10 @@ const deletarAutor = async (ctx) => {
 				return imprimir(ctx, 401, 'autor já se encontra deletado');
 			}
 			const resultado = await autores.deletarAutor(id);
+			const { senha, codigo_verificacao, ...dados } = resultado;
 
 			await posts.deletarPostsAutor(autor.id);
-			return imprimir(ctx, 200, 'autor deletado', 'autor', resultado);
+			return imprimir(ctx, 200, 'autor deletado', 'autor', dados);
 		}
 	}
 	return imprimir(ctx, 404, 'autor não encontrado');
@@ -238,6 +266,7 @@ const deletarAutor = async (ctx) => {
 
 module.exports = {
 	criarAutor,
+	confirmarEmail,
 	atualizarAutor,
 	exibirAutor,
 	exibirAutores,
