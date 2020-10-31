@@ -27,6 +27,8 @@ const obterAutores = async () => {
 	const query = `SELECT * FROM autores;`;
 	const resultado = await database.query(query);
 
+	if (!resultado) return null;
+
 	return resultado.rows;
 };
 

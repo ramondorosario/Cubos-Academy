@@ -28,18 +28,18 @@ const schema = [
 	)`,
 	},
 	{
-		3: `CREATE TABLE IF NOT EXISTIS credit_cards (
+		3: `CREATE TABLE IF NOT EXISTS credit_cards (
 		id SERIAL,
-		autor_id NUMBER NOT NULL,
+		autor_id INT NOT NULL,
 		first_digits TEXT NOT NULL,
 		last_digits TEXT NOT NULL,
 		brand_card TEXT,
-		card_hash TEXT NOT NULL
+		card_hash TEXT NOT NULL,
 		holder_name TEXT NOT NULL
 	)`,
 	},
 	{
-		4: `CREATE TABLE IF NOT EXISTIS transactions (
+		4: `CREATE TABLE IF NOT EXISTS transactions (
 			id SERIAL
 		)`,
 	},
