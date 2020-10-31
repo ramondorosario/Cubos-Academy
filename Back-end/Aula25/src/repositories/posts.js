@@ -51,7 +51,7 @@ const deletarPost = async (id) => {
 const deletarPostsAutor = async (idAutor) => {
 	const query = `UPDATE posts SET deletado = true WHERE id_autor= ${idAutor} RETURNING *`;
 
-	return console.log(await (await database.query(query)).rows);
+	return database.query(query).rows;
 };
 
 module.exports = {
