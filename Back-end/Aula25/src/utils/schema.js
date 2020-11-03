@@ -40,11 +40,7 @@ const schema = [
 		holder_name TEXT NOT NULL
 	)`,
 	},
-	{
-		4: `CREATE TABLE IF NOT EXISTS transactions (
-			id SERIAL
-		)`,
-	},
+	{ 4: `ALTER TABLE autores ADD saldo BIGINT DEFAULT 0` },
 ];
 
 /** Deleta uma tabela */

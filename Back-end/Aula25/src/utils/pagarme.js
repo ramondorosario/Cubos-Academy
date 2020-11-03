@@ -15,10 +15,10 @@ const pay = async (ctx, amount, card) => {
 				api_key: process.env.PAGARME_KEY,
 			}
 		);
-		console.log(transaction.data.card);
+		// console.log(transaction.data);
 		return transaction.data.card;
 	} catch (err) {
-		console.log(err.response.data);
+		// console.log(err.response.data);
 		return response(ctx, 400, 'pagamento não concluído');
 	}
 };

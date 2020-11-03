@@ -62,6 +62,21 @@ const atualizarAutor = async (id, propriedade, valor) => {
 	return resultado.rows.shift();
 };
 
+/** Atualizar Saldo */
+const atualizarSaldo = async (authorId, valor) => {
+	const saldo = await database.query(
+		`SELECT saldo FROM autores WHERE id=${authorId}`
+	);
+
+	const saldoAnterior = saldo.rows.shift().saldo;
+
+	const query = `UPDATE autores SET saldo = ${
+		saldoAnterior + valor
+	} WHERE id = ${authorId}`;
+
+	return database.query(query);
+};
+
 module.exports = {
 	criarAutor,
 	confirmarEmail,
@@ -70,4 +85,5 @@ module.exports = {
 	obterAutores,
 	deletarAutor,
 	atualizarAutor,
+	atualizarSaldo,
 };
