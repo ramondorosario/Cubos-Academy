@@ -64,14 +64,14 @@ const atualizarAutor = async (id, propriedade, valor) => {
 
 /** Atualizar Saldo */
 const atualizarSaldo = async (authorId, valor) => {
-	const saldo = await database.query(
+	const resultado = await database.query(
 		`SELECT saldo FROM autores WHERE id=${authorId}`
 	);
 
-	const saldoAnterior = saldo.rows.shift().saldo;
+	const saldoAnterior = resultado.rows.shift().saldo;
 
 	const query = `UPDATE autores SET saldo = ${
-		saldoAnterior + valor
+		Number(saldoAnterior) + valor
 	} WHERE id = ${authorId}`;
 
 	return database.query(query);

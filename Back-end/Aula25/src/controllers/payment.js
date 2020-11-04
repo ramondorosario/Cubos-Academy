@@ -2,6 +2,7 @@ const pagarme = require('../utils/pagarme');
 const response = require('../utils/response');
 const autores = require('../repositories/autores');
 const email = require('../utils/email');
+const respostasHtml = require('../utils/repostas_html');
 
 const payment = async (ctx) => {
 	const {
@@ -34,8 +35,25 @@ const payment = async (ctx) => {
 		const resultado = await pagarme.pay(ctx, amount, card);
 		await autores.atualizarSaldo(authorId, amount);
 
-		// const doador = ctx.state.userId;
-		// await email.enviarEmail(doador, 'comprovante de pagamento', );
+		const doador = ctx.state.email;
+		// Envia um email de comprovante de pagamento para o doador
+		await email.enviarEmail(
+			doador,
+			'comprovante de pagamento',
+			respostasHtml.comprovantePagamento(amount)
+		);
+
+		const dadosDoador = await autores.obterAutor(ctx.state.userId);
+		// Envia um email de recebimento de pagamento para o autor favorecido
+		await email.enviarEmail(
+			autorFavorecido.email,
+			'recebimento de doação',
+			`Você recebeu R$ ${(amount / 100)
+				.toFixed(2)
+				.replace('.', ',')} de ${dadosDoador.primeiro_nome} ${
+				dadosDoador.ultimo_nome
+			}`
+		);
 
 		return response(ctx, 201, 'pagamento realizado', 'card', {
 			cardHash: resultado.id,
